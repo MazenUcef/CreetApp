@@ -56,7 +56,7 @@ const handleSubmit = async (e)=>{
     console.log(result);
   } catch (error) {
     setloading(false);
-    setErrorMessage(error.message);
+    setErrorMessage(error.message);  
   }
 }
 
