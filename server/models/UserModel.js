@@ -18,6 +18,10 @@ email:{
 password:{
     type:String,
     required:true
+},
+photoURL:{
+    type:String,
+    default:'https://filestore.community.support.microsoft.com/api/images/0ce956b2-9787-4756-a580-299568810730?upload=true'
 }
 },{timestamps:true}
 );

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
 
 
 
@@ -114,7 +115,9 @@ const handleSubmit = async (e)=>{
               />
             </div>
             <Button disabled={loading} type='submit' className='bg-primary text-secondary'>{loading ?<> <Spinner color={'#0c4a60'} size={"sm"}/>
-            <span className='pl-3'> Loading...</span></>: "Sign Up"}</Button>
+              <span className='pl-3'> Loading...</span></>: "Sign Up"}
+            </Button>
+            <OAuth/>
           </form>
           <div className='flex gap-2'>
             <span className='text-sm'>Have an account?</span>
