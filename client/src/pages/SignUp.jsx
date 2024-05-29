@@ -75,6 +75,7 @@ const handleSubmit = async (e)=>{
         </div>
         {/* right Side */}
         <div className='flex-1'>
+          <h1 className='font-bold text-4xl mb-11 text-secondary'>Sign Up</h1>
           <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
             <div>
               <Label value='Your username'/>
