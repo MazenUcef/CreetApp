@@ -45,7 +45,7 @@ const Header = () => {
                             <Dropdown
                                 arrowIcon={false}
                                 inline
-                                label={<Avatar alt='user' img={currentUser.photoURL} rounded className='w-4 h-5'/>}
+                                label={<Avatar alt='user' img={currentUser.photoURL} rounded className='w-10 h-6'/>}
                             >
                                 <Dropdown.Header>
                                     <span className='block text-sm'>@{currentUser.username}</span>
@@ -64,7 +64,7 @@ const Header = () => {
                                 <Button className='font-bold hover:text-third bg-secondary text-primary'>
                                     Sign In
                                 </Button>
-                            </Link>
+                            </Link> 
 
                         )
                 }
