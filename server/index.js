@@ -5,6 +5,7 @@ import bcryptjs from 'bcryptjs';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoute.js'
 import authRoutes from './routes/authRoute.js'
+import cookieParser from 'cookie-parser';
 
  
 dotenv.config();
@@ -13,6 +14,7 @@ dotenv.config();
 const app = express(); 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
 
 
 mongoose.set('strictQuery' , false);
