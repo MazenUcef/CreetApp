@@ -2,13 +2,30 @@ import React from 'react'
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
 import { Link, useLocation } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { signOutSuccess } from '../redux/user/userSlice';
 
 
 const Header = () => {
     const pathname = useLocation().pathname
+    const dispatch = useDispatch()
     const { currentUser } = useSelector(state => state.user)
     // console.log(currentUser.photoURL);
+    const handleSignOut = async () => {
+        try {
+            const res = await fetch('/api/user/signout', {
+                method: "POST"
+            })
+            const data = await res.json()
+            if (!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signOutSuccess())
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
     return (
         <Navbar className='border-b-2 bg-primary'>
             <Link to={'/'} className='self-center whitespace-nowrap text-secondary text-sm sm:text-2xl font-bold'>
@@ -45,7 +62,7 @@ const Header = () => {
                             <Dropdown
                                 arrowIcon={false}
                                 inline
-                                label={<Avatar alt='user' img={currentUser.photoURL} rounded className='w-10 h-6'/>}
+                                label={<Avatar alt='user' img={currentUser.photoURL} rounded className='w-10 h-6' />}
                             >
                                 <Dropdown.Header>
                                     <span className='block text-sm'>@{currentUser.username}</span>
@@ -55,7 +72,7 @@ const Header = () => {
                                     <Dropdown.Item>Profile</Dropdown.Item>
                                 </Link>
                                 <Dropdown.Divider />
-                                <Dropdown.Item>Sign Out</Dropdown.Item>
+                                <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
                             </Dropdown>
                         )
                         :
@@ -64,7 +81,7 @@ const Header = () => {
                                 <Button className='font-bold hover:text-third bg-secondary text-primary'>
                                     Sign In
                                 </Button>
-                            </Link> 
+                            </Link>
 
                         )
                 }

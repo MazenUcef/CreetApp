@@ -48,11 +48,17 @@ const userSlice = createSlice({
         deleteUserFailure:(state,action)=>{
             state.loading = false;
             state.error = action.payload;
+        },
+        signOutSuccess:(state)=>{
+            state.currentUser = null;
+            state.loading = false;
+            state.error = null;
         }
     },
 });  // Added missing closing parenthesis
 
 export const {
+    signOutSuccess,
     updateSuccess,
     updateFailure,
     updateStart,
