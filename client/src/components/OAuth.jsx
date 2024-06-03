@@ -4,7 +4,7 @@ import {AiFillGoogleCircle} from 'react-icons/ai'
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 import { app } from '../Firebase';
 import axios from 'axios';
-import { SignInSuccess } from '../redux/user/userSlice';
+import { signInSuccess } from '../redux/user/userSlice';
 import {useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const OAuth = () => {
             })
             const result = await response.data
             if(result){
-                dispatch(SignInSuccess(result))
+                dispatch(signInSuccess(result))
                 navigate('/')
             }
         } catch (error) {

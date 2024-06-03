@@ -3,7 +3,7 @@ import { Button, Label, TextInput, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { signInFailure, signInStart, SignInSuccess } from '../redux/user/userSlice'
+import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice'
 import OAuth from '../components/OAuth'
 
 const SignIn = () => {
@@ -46,7 +46,7 @@ const SignIn = () => {
       const result = await response.data;
       if (result) {
         setLoading(false);
-        dispatch(SignInSuccess(result))
+        dispatch(signInSuccess(result))
         navigate('/')
         console.log(result);
       }

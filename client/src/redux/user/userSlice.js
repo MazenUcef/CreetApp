@@ -1,37 +1,67 @@
-import {createSlice} from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
-
-
-
-
-const initialState= {
+const initialState = {
     currentUser: null,
-    error:null,
+    error: null,
     loading: false,
-}
+};
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        signInStart:(state,action)=>{
+        signInStart: (state) => {
             state.loading = true;
             state.error = null;
-        }
-        ,
-        SignInSuccess:(state,action)=>{
+        },
+        signInSuccess: (state, action) => {  
             state.currentUser = action.payload;
             state.loading = false;
             state.error = null;
-        }
-        ,
-        signInFailure:(state,action)=>{
+        }, 
+        signInFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+        updateStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        updateSuccess: (state, action) => {
+            state.currentUser = action.payload;
+            state.loading = false;
+            state.error = null;
+        },
+        updateFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        },
+        deleteUserStart:(state)=>{
+            state.loading = true;
+            state.error = null;
+        },
+        deleteUserSuccess:(state)=>{
+            state.currentUser=null;
+            state.loading = false;
+            state.error = null;
+        },
+        deleteUserFailure:(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         }
-    }
-})
+    },
+});  // Added missing closing parenthesis
 
+export const {
+    updateSuccess,
+    updateFailure,
+    updateStart,
+    signInFailure,
+    signInStart,
+    signInSuccess,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,  
+} = userSlice.actions;
 
-
-export const {signInFailure , signInStart , SignInSuccess} = userSlice.actions
-export default userSlice.reducer
+export default userSlice.reducer;
