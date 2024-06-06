@@ -147,7 +147,7 @@ const DashProfile = () => {
   }
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
-      <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
+      <h1 className='my-7 text-center text-primary font-semibold text-4xl'>Profile</h1>
       <form onSubmit={handelSubmit} className='flex flex-col gap-4'>
         <input hidden ref={photoPicker} type='file' accept='image/*' onChange={handlePhotoChange} />
         <div className='relative w-32 h-32 self-center rounded-full cursor-pointer shadow-md overflow-hidden '>
@@ -171,6 +171,7 @@ const DashProfile = () => {
           )}
           <img onClick={() => photoPicker.current.click()} src={photoFileUrl || currentUser.photoURL} alt='userPhoto' className='h-full w-full object-cover rounded-full' />
         </div>
+        <h1 className='my-3 text-primary text-center font-semibold text-2xl'>{currentUser.username}</h1>
         {/* <progress value={photoFileUploadprogress}></progress> */}
 
         {photoUploadError && (

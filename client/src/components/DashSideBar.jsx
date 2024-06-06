@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Sidebar } from 'flowbite-react'
-import { HiArrowSmRight, HiArrowSmUp, HiUser } from 'react-icons/hi'
+import { HiArrowSmRight, HiArrowSmUp, HiDocumentText, HiUser } from 'react-icons/hi'
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOutSuccess } from '../redux/user/userSlice';
@@ -39,14 +39,21 @@ const DashSideBar = () => {
   return (
     <Sidebar className='w-full md:w-56'>
       <Sidebar.Items>
-        <Sidebar.ItemGroup>
+        <Sidebar.ItemGroup className='flex flex-col gap-1'>
           <Link to={'/dashboard?tab=profile'}>
-            <Sidebar.Item className="text-primary font-bold cursor-pointer" active={tab === "profile"} icon={HiUser} label={currentUser.username} as="div">
+            <Sidebar.Item className="text-primary font-bold cursor-pointer" as={'div'} active={tab === "profile"} icon={HiUser} label={currentUser.isAdmin? `Admin` : `User`}>
               Profile
             </Sidebar.Item>
           </Link>
+          {currentUser.isAdmin && (
+          <Link to='/dashboard?tab=posts'>
+            <Sidebar.Item active={tab === 'posts'} icon={HiDocumentText} as={'div'}>
+              Posts
+            </Sidebar.Item>
+          </Link>
+          )}
           <Link onClick={handleSignOut}>
-            <Sidebar.Item className="text-primary font-bold cursor-pointer" icon={HiArrowSmRight} >
+            <Sidebar.Item className="text-primary font-bold cursor-pointer" as={'div'} icon={HiArrowSmRight} >
               Sign Out
             </Sidebar.Item>
           </Link>
