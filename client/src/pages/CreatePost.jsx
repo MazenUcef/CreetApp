@@ -97,11 +97,11 @@ const CreatePost = () => {
                 <div className='flex flex-col gap-4 sm:flex-row justify-between'>
                     <TextInput onChange={handleOnChange} className='flex-1' type='text' placeholder='Title' required id='title' />
                     <Select id='category' onChange={handleOnChange}>
-                        <option value='uncategorized'>Select topic</option>
-                        <option value='social'>Social</option>
-                        <option value='technology'>Technology</option>
-                        <option value='psychologically'>Psychologically</option>
-                        <option value='other'>Other</option>
+                        <option value='Uncategorized'>Select topic</option>
+                        <option value='Social'>Social</option>
+                        <option value='Technology'>Technology</option>
+                        <option value='Psychologically'>Psychologically</option>
+                        <option value='Other'>Other</option>
                     </Select>
                 </div>
                 <div className='flex gap-4 items-center justify-between border-2 p-3 border-primary'>
