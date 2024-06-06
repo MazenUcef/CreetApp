@@ -6,14 +6,15 @@ import { app } from '../Firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
-import {HiOutlineExclamationCircle} from 'react-icons/hi';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import {Link} from 'react-router-dom'
 
 
 
 const DashProfile = () => {
   const dispatch = useDispatch()
   const photoPicker = useRef()
-  const { currentUser , error } = useSelector(state => state.user)
+  const { currentUser, error , loading } = useSelector(state => state.user)
   const [photoFile, setPhotoFile] = useState(null);
   const [photoFileUrl, setPhotoFileUrl] = useState(null);
   const [photoFileUploadprogress, setphotoFileUploadprogress] = useState(null);
@@ -109,18 +110,18 @@ const DashProfile = () => {
       dispatch(updateFailure(error.message))
     }
   }
-  const handleDeleteUser =async ()=>{
+  const handleDeleteUser = async () => {
     // console.log('delete user');
     setShowModal(false)
     try {
       dispatch(deleteUserStart())
-      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
-        method:'DELETE',
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
       })
       const data = await res.json()
-      if(!res.ok){
+      if (!res.ok) {
         dispatch(deleteUserFailure(data.message))
-      }else{
+      } else {
         dispatch(deleteUserSuccess(data))
       }
     } catch (error) {
@@ -129,15 +130,15 @@ const DashProfile = () => {
   }
 
 
-  const handleSignOut = async()=>{
+  const handleSignOut = async () => {
     try {
-      const res = await fetch('/api/user/signout',{
-        method:"POST"
+      const res = await fetch('/api/user/signout', {
+        method: "POST"
       })
       const data = await res.json()
-      if(!res.ok){
+      if (!res.ok) {
         console.log(data.message);
-      }else{
+      } else {
         dispatch(signOutSuccess())
       }
     } catch (error) {
@@ -181,7 +182,14 @@ const DashProfile = () => {
         <TextInput onChange={handelChange} type='text' id='username' placeholder='username' defaultValue={currentUser.username} />
         <TextInput onChange={handelChange} type='email' id='email' placeholder='email' defaultValue={currentUser.email} />
         <TextInput onChange={handelChange} type='password' id='password' placeholder='password' />
-        <Button type='submit'>Update</Button>
+        <Button className='w-full text-secondary hover:bg-third' type='submit' disabled={loading || photoFileUploadprogress}>{loading ? "Loading..." : 'Update'}</Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+              <Button type='button' className='w-full hover:bg-third  text-secondary'>Create a post</Button>
+            </Link>
+          )
+        }
       </form>
       {
         profielUpdateStatus && (
@@ -205,13 +213,13 @@ const DashProfile = () => {
         <Modal.Header />
         <Modal.Body>
           <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-primary mb-4 mx-auto'/>
+            <HiOutlineExclamationCircle className='h-14 w-14 text-primary mb-4 mx-auto' />
           </div>
           <p className='mb-5 text-lg font-bold text-primary '>Are you sure you want to delete your account?</p>
-           <div className=' flex justify-around items-center '>
+          <div className=' flex justify-around items-center '>
             <button className='bg-secondary py-2 px-8 font-bold rounded-full' onClick={handleDeleteUser}>Yes I'm Sure</button>
-            <button className='bg-primary py-2 px-5 rounded-full font-bold text-third' onClick={()=>setShowModal(false)}>Cancel</button>
-           </div>
+            <button className='bg-primary py-2 px-5 rounded-full font-bold text-third' onClick={() => setShowModal(false)}>Cancel</button>
+          </div>
         </Modal.Body>
       </Modal>
     </div>

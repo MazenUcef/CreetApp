@@ -2,11 +2,12 @@ import axios from 'axios'
 import { Button, Label, TextInput, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice'
 import OAuth from '../components/OAuth'
 
 const SignIn = () => {
+  const {error} = useSelector(state=>state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -52,7 +53,8 @@ const SignIn = () => {
       }
     } catch (error) {
       setLoading(false);
-      // setErrorMessage(error.message)
+      setErrorMessage(error.response.data.message)
+      // console.log(error.response.data.message);
       dispatch(signInFailure(error.message))
     }
   }
@@ -108,7 +110,10 @@ const SignIn = () => {
 
           </div>
           {
-            errorMessage && <p className='text-sm text-red-500'>{errorMessage}</p>
+            error && <p className='text-sm text-red-500'>{error}</p>         
+          }
+          {
+            errorMessage && <p className='text-sm text-red-500'>{errorMessage}</p>         
           }
         </div>
       </div>

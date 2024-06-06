@@ -47,7 +47,7 @@ export const signIn = async(req , res , next)=>{
         return next(errorHandler(401 , 'Invalid Password'))
     }
 
-    const token = jwt.sign({id:validUser._id} , process.env.SECRET_KEY);
+    const token = jwt.sign({id:validUser._id , isAdmin:validUser.isAdmin} , process.env.SECRET_KEY);
     const {password:pass , ...rest} = validUser._doc;
     return res.status(200).cookie("access_token" , token , {httpOnly: true}).json(rest)
     } catch (error) {
@@ -61,7 +61,7 @@ export const google = async(req,res,next)=>{
     try {
         const user = await User.findOne({email})
         if(user){
-            const token = jwt.sign({id:user._id} ,process.env.SECRET_KEY );
+            const token = jwt.sign({id:user._id , isAdmin:user.isAdmin} ,process.env.SECRET_KEY );
             const {password:pass , ...rest} = user._doc;
             res.status(200).cookie("access_token" , token , {
                 httpOnly: true,
@@ -76,7 +76,7 @@ export const google = async(req,res,next)=>{
                 photoURL:photoURL
             })
             await newUser.save()
-            const token = jwt.sign({id:newUser._id} , process.env.SECRET_KEY);
+            const token = jwt.sign({id:newUser._id , isAdmin:newUser.isAdmin} , process.env.SECRET_KEY);
             const {password:pass , ...rest} = newUser._doc;
             res.status(200).cookie("access_token" , token , {
                 httpOnly : true,
