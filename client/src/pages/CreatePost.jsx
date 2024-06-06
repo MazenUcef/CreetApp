@@ -6,12 +6,26 @@ import { getDownloadURL, getStorage , ref , uploadBytesResumable  } from 'fireba
 import { app } from '../Firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import {useNavigate} from 'react-router-dom'
 
 const CreatePost = () => {
+    const navigate = useNavigate()
     const [file, setFile] = useState(null)
     const [photoUploadprogress, setphotoUploadprogress] = useState(null)
     const [photoUploadError, setphotoUploadError] = useState(null)
-    const [formData, setformData] = useState({})
+    const [formData, setFormData] = useState({})
+    const [publishError, setPublishError] = useState(null)
+
+
+
+
+    const handleOnChange = (e)=>{
+        const {id,value} = e.target
+        setFormData({
+            ...formData,[id]:value
+        })
+    }
+    console.log(formData);
 
 
     const handelUploadImage = async () => {
@@ -38,7 +52,7 @@ const CreatePost = () => {
                         console.log(downloadURL);
                         setphotoUploadprogress(null);
                         setphotoUploadError(null);
-                        setformData({ ...formData, photo: downloadURL })
+                        setFormData({ ...formData, photo: downloadURL })
                     })
                 }
             )
@@ -48,14 +62,41 @@ const CreatePost = () => {
             console.log(error);
         }
     }
+
+
+    const handleSubmit = async(e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch('/api/post/create',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(formData)
+            })
+            const data = await res.json()
+            
+            if(!res.ok){
+                setPublishError(data.message)
+                return
+            }
+            if(res.ok){
+                setPublishError(null)
+                navigate(`/post/${data.slug}`)
+            }
+        } catch (error) {
+            setPublishError('somthing went wrong' , error)
+        }
+
+    }
     return (
         <div className='p-3 max-w-3xl mx-auto min-h-screen'>
             <h1 className='text-center text-3xl my-7 font-bold text-third'>Let's Get In Touch</h1>
             <h1 className='text-center text-2xl my-7 font-bold text-primary'>Create a new post</h1>
-            <form className='flex flex-col gap-5'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
                 <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-                    <TextInput className='flex-1' type='text' placeholder='Title' required id='title' />
-                    <Select>
+                    <TextInput onChange={handleOnChange} className='flex-1' type='text' placeholder='Title' required id='title' />
+                    <Select id='category' onChange={handleOnChange}>
                         <option value='uncategorized'>Select topic</option>
                         <option value='social'>Social</option>
                         <option value='technology'>Technology</option>
@@ -89,8 +130,11 @@ const CreatePost = () => {
                 {
                     formData.photo && <img src={formData.photo} alt='' className='w-full h-full object-cover' />
                 }
-                <ReactQuill required theme="snow" placeholder='write something...' className='h-72 mb-12' />
+                <ReactQuill onChange={(value)=>setFormData({...formData , content:value})} required theme="snow" placeholder='write something...' className='h-72 mb-12' />
                 <Button type='submit' className='bg-primary text-secondary'>Create Post</Button>
+                {
+                    publishError && <Alert className='text-sm text-secondary'>{publishError}</Alert>
+                }
             </form>
         </div>
     )

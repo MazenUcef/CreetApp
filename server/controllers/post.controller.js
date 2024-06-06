@@ -1,4 +1,5 @@
 import Post from "../models/postModel.js"
+import { errorHandler } from "../utils/error.js";
 
 export const create = async (req,res,next)=>{
     if(!req.user.isAdmin){
@@ -10,7 +11,7 @@ export const create = async (req,res,next)=>{
     const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g,'-')
     const newPost = new Post({
         ...req.body,
-        slug,
+        slug, 
         userId:req.user.id
     })
     try {
