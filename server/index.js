@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import bcryptjs from 'bcryptjs';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoute.js'
 import authRoutes from './routes/authRoute.js'
+import postRoutes from './routes/post.routes.js'
 import cookieParser from 'cookie-parser';
 
  
@@ -29,6 +29,7 @@ app.listen(5000,()=>{
 
 app.use('/api/user' , userRoutes)
 app.use('/api/auth' , authRoutes)
+app.use('/api/post' , postRoutes)
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
