@@ -12,7 +12,7 @@ export const create = async (req, res, next) => {
     const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '-')
     
     // Log the request body to ensure it contains the correct data
-    console.log('Received request body:', req.body);
+    // console.log('Received request body:', req.body);
 
     const newPost = new Post({
         photo: req.body.photo,
@@ -73,3 +73,27 @@ export const displayPosts = async (req, res, next) => {
         next(error)
     }
 } 
+
+
+
+
+
+export const deletePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+
+        if (!post) {
+            return next(errorHandler(404, 'Post not found'));
+        }
+
+        // Check if the user is the author of the post or an admin
+        if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
+            return next(errorHandler(403, 'You are not allowed to delete this post'));
+        }
+
+        await Post.findByIdAndDelete(req.params.postId);
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
+};

@@ -15,7 +15,7 @@ const CreatePost = () => {
     const [photoUploadError, setphotoUploadError] = useState(null)
     const [formData, setFormData] = useState({})
     const [publishError, setPublishError] = useState(null)
-    console.log(formData);
+    // console.log(formData);
 
 
 
@@ -26,7 +26,7 @@ const CreatePost = () => {
             ...formData,[id]:value
         })
     }
-    console.log(formData);
+    // console.log(formData);
 
 
     const handelUploadImage = async () => {
@@ -41,7 +41,7 @@ const CreatePost = () => {
             const uploadTask = uploadBytesResumable(storageRef, file);
             uploadTask.on('state_changed', (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(progress);
+                // console.log(progress);
                 setphotoUploadprogress(progress.toFixed(0))
             },
                 (error) => {
@@ -50,7 +50,7 @@ const CreatePost = () => {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        console.log(downloadURL);
+                        // console.log(downloadURL);
                         setphotoUploadprogress(null);
                         setphotoUploadError(null);
                         setFormData(prevFormData => ({ ...prevFormData, photo: downloadURL }))
@@ -77,7 +77,7 @@ const CreatePost = () => {
                 body: JSON.stringify(formData)
             })
             const data = await res.json()
-            console.log(data);
+            // console.log(data);
             
             if (!res.ok) {
                 setPublishError(data.message)
