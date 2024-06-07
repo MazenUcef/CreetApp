@@ -8,8 +8,14 @@ export const create = async (req, res, next) => {
     if (!req.body.title || !req.body.content) {
         return next(errorHandler(400, 'All fields are required'))
     }
+
     const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '-')
+    
+    // Log the request body to ensure it contains the correct data
+    console.log('Received request body:', req.body);
+
     const newPost = new Post({
+        photo: req.body.photo,
         ...req.body,
         slug,
         userId: req.user.id
@@ -21,6 +27,8 @@ export const create = async (req, res, next) => {
         next(error.message)
     }
 }
+
+
 
 
 export const displayPosts = async (req, res, next) => {

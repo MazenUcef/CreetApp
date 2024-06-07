@@ -11,10 +11,11 @@ import {useNavigate} from 'react-router-dom'
 const CreatePost = () => {
     const navigate = useNavigate()
     const [file, setFile] = useState(null)
-    const [photoUploadprogress, setphotoUploadprogress] = useState(null)
+    const [photoUploadprogress, setphotoUploadprogress] = useState(null) 
     const [photoUploadError, setphotoUploadError] = useState(null)
     const [formData, setFormData] = useState({})
     const [publishError, setPublishError] = useState(null)
+    console.log(formData);
 
 
 
@@ -52,7 +53,7 @@ const CreatePost = () => {
                         console.log(downloadURL);
                         setphotoUploadprogress(null);
                         setphotoUploadError(null);
-                        setFormData({ ...formData, photo: downloadURL })
+                        setFormData(prevFormData => ({ ...prevFormData, photo: downloadURL }))
                     })
                 }
             )
@@ -62,33 +63,35 @@ const CreatePost = () => {
             console.log(error);
         }
     }
+    
 
 
-    const handleSubmit = async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/post/create',{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json'
+            const res = await fetch('/api/post/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                body:JSON.stringify(formData)
+                body: JSON.stringify(formData)
             })
             const data = await res.json()
+            console.log(data);
             
-            if(!res.ok){
+            if (!res.ok) {
                 setPublishError(data.message)
                 return
             }
-            if(res.ok){
+            if (res.ok) {
                 setPublishError(null)
                 navigate(`/post/${data.slug}`)
             }
         } catch (error) {
-            setPublishError('somthing went wrong' , error)
+            setPublishError('Something went wrong', error)
         }
-
     }
+    
     return (
         <div className='p-3 max-w-3xl mx-auto min-h-screen'>
             <h1 className='text-center text-3xl my-7 font-bold text-third'>Let's Get In Touch</h1>

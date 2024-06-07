@@ -21,7 +21,7 @@ const postSchema = new Schema({
         required: true,
         unique: true
     },
-    image: {
+    photo: {
         type: String,
         default: 'https://www.blogtyrant.com/wp-content/uploads/2017/02/how-to-write-a-good-blog-post.png',
     },
@@ -34,8 +34,9 @@ const postSchema = new Schema({
         required: true,
         unique: true
     },
-}, { timestamps: true }
-)
+}, { timestamps: true })
+
+
 
 
 const Post  = mongoose.model('Post' , postSchema)
