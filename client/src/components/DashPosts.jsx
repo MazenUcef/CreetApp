@@ -29,7 +29,7 @@ export default function DashPosts() {
     if (currentUser.isAdmin) {
       fetchPosts();
     }
-  }, [currentUser._id]); 
+  }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
@@ -102,7 +102,8 @@ export default function DashPosts() {
                       <img
                         src={post.photo}
                         alt={post.title}
-                        className='w-20 h-10 object-cover bg-gray-500'
+                        style={{ borderRadius: '5px' }}
+                        className='w-20 h-20 object-cover bg-gray-500'
                       />
                     </Link>
                   </Table.Cell>
