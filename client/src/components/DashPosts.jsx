@@ -29,7 +29,7 @@ export default function DashPosts() {
     if (currentUser.isAdmin) {
       fetchPosts();
     }
-  }, [currentUser._id]);
+  }, [currentUser._id]); 
 
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
@@ -57,7 +57,7 @@ export default function DashPosts() {
     console.log(postIdToDelete);
     setShowModal(false);
     try {
-      const res = await fetch(`/api/post/delete/${postIdToDelete}`, {
+      const res = await fetch(`/api/post/delete/${postIdToDelete}/${currentUser._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -74,13 +74,13 @@ export default function DashPosts() {
       console.log(error);
     }
   };
-  
+
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
-          <Table hoverable className='shadow-md'>
+          <Table hoverable className='shadow-md w-[70vw]'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>Post image</Table.HeadCell>
@@ -92,9 +92,9 @@ export default function DashPosts() {
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
-              <Table.Body className='divide-y'>
+              <Table.Body className='divide-y' key={post._id}>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                  <Table.Cell>
+                  <Table.Cell className='font-bold'>
                     {new Date(post.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
@@ -108,35 +108,36 @@ export default function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>
                     <Link
-                      className='font-medium text-gray-900 dark:text-white'
+                      className='font-bold text-gray-900 dark:text-white'
                       to={`/post/${post.slug}`}
                     >
                       {post.title}
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{post.category}</Table.Cell>
+                  <Table.Cell className='font-bold'>{post.category}</Table.Cell>
                   <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
                         setPostIdToDelete(post._id);
                       }}
-                      className='font-medium text-red-500 hover:underline cursor-pointer'
+                      className='font-bold text-secondary hover:underline cursor-pointer'
                     >
                       Delete
                     </span>
                   </Table.Cell>
                   <Table.Cell>
                     <Link
-                      className='text-teal-500 hover:underline'
+                      className='text-primary hover:underline'
                       to={`/update-post/${post._id}`}
                     >
-                      <span>Edit</span>
+                      <span className='font-bold'>Edit</span>
                     </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
             ))}
+
           </Table>
           {showMore && (
             <button

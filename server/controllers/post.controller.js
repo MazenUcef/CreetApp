@@ -1,3 +1,4 @@
+import { log } from "console";
 import Post from "../models/postModel.js";
 import { errorHandler } from "../utils/error.js";
 
@@ -79,17 +80,15 @@ export const displayPosts = async (req, res, next) => {
 
 
 export const deletePost = async (req, res, next) => {
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+        return next(errorHandler(403, 'You are not allowed to delete this post'));
+    }
     try {
-        const post = await Post.findById(req.params.postId);
+        // const post = await Post.findById(req.params.postId);
 
-        if (!post) {
-            return next(errorHandler(404, 'Post not found'));
-        }
-
-        // Check if the user is the author of the post or an admin
-        if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
-            return next(errorHandler(403, 'You are not allowed to delete this post'));
-        }
+        // if (!post) {
+        //     return next(errorHandler(404, 'Post not found'));
+        // }
 
         await Post.findByIdAndDelete(req.params.postId);
         res.status(200).json({ message: "Post deleted successfully" });
@@ -97,3 +96,36 @@ export const deletePost = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const updatePost = async (req, res, next) => {
+    // console.log(req.user);
+    // console.log(req.params);
+    if(!req.user.isAdmin || req.user.id !== req.params.userId){
+        return next(errorHandler(403, 'You are not allowed to update'))
+    }
+    try {
+        const post = await Post.findByIdAndUpdate(req.params.postId);
+
+        if (!post) {
+            return next(errorHandler(404, 'Post not found'));
+        }
+
+        // Check if the user is the author of the post or an admin
+        // if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
+        //     return next(errorHandler(403, 'You are not allowed to update this post'));
+        // }
+
+        const updatedpost = await Post.findByIdAndUpdate(req.params.postId , {
+            $set:{
+                title:req.body.title,
+                content:req.body.content,
+                category:req.body.category,
+                photo:req.body.photo
+            }},{new:true});
+        // console.log(updatePost);
+        res.status(200).json(updatedpost);
+    } catch (error) {
+        next(error);
+    }
+}
