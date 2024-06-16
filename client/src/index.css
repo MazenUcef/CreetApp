@@ -18,3 +18,7 @@ font-size: 1.3rem;
 font-family: sans-serif;
 margin: 1.5rem 0;
 }
+.break-words {
+    word-wrap: break-word;
+    word-break: break-word;
+}

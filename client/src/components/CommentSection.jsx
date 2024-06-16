@@ -1,24 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { Alert, Button, Textarea, TextInput } from 'flowbite-react';
+import Comment from './Comment';
 
 const CommentSection = ({ postId }) => {
-    const [comments, setComments] = useState("")
+    const [comment, setComment] = useState("")
     const { currentUser } = useSelector(state => state.user)
     const [commentError, setCommentError] = useState(null)
-
-
+    const [comments, setComments] = useState([])
+    console.log(comments);
 
 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (comments.length > 200) {
+        if (comment.length > 200) {
             setCommentError("Comment must be less than 200 characters")
             return
         }
-        if (comments.length <= 0) {
+        if (comment.length <= 0) {
             setCommentError("Comment cannot be empty")
             return
         }
@@ -30,21 +31,42 @@ const CommentSection = ({ postId }) => {
                 },
                 body: JSON.stringify({
                     postId,
-                    content: comments,
+                    content: comment,
                     userId: currentUser._id
                 })
             })
             const data = await res.json()
             if (res.ok) {
-                setComments("")
+                setComments((prev) => [...prev, data])
+                setComment("")
                 setCommentError(null)
             }
+            // setComment('')
         } catch (error) {
             setCommentError(error.message)
             console.log(error.message);
         }
-        console.log(comments)
+        console.log(comment)
     }
+
+
+
+
+    useEffect(() => {
+        const getComments = async () => {
+            try {
+                const res = await fetch(`/api/comment/displayPostComment/${postId}`)
+                if (res.ok) {
+                    const data = await res.json()
+                    setComments(data)
+                }
+
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+        getComments()
+    }, [postId])
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {
@@ -75,11 +97,11 @@ const CommentSection = ({ postId }) => {
                             placeholder='Add Your comment...'
                             rows='3'
                             maxLength='200'
-                            onChange={(e) => setComments(e.target.value)}
+                            onChange={(e) => setComment(e.target.value)}
                             className='rounded-lg w-full outline-secondary'
                         />
                         <div className='flex justify-between items-center mt-5'>
-                            <p className='text-third text-xs'>{200 - comments.length} charachters left</p>
+                            <p className='text-third text-xs'>{200 - comment.length} charachters left</p>
                             <Button type='submit' className='bg-primary text-secondary rounded-full'>Submit</Button>
                         </div>
                         {
@@ -89,6 +111,28 @@ const CommentSection = ({ postId }) => {
                             </Alert>
                         }
                     </form>
+                )
+            }
+            {
+                comments.length === 0 ? (
+                    <p className='text-sm text-secondary'>No comments yet</p>
+                ) : (
+                    <>
+                        <div className='text-sm my-5 flex items-center gap-1'>
+                            <p className='text-primary'>comments</p>
+                            <div className='text-secondary'>
+                                <p>{comments.length}</p>
+                            </div>
+                        </div>
+                        {
+                            comments.map((comment)=>(
+                                <Comment
+                                key={comment._id}
+                                comment={comment}
+                                />
+                            ))
+                        }
+                    </>
                 )
             }
         </div>
