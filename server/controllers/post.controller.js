@@ -1,4 +1,3 @@
-import { log } from "console";
 import Post from "../models/postModel.js";
 import { errorHandler } from "../utils/error.js";
 
