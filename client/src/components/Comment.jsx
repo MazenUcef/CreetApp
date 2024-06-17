@@ -6,7 +6,7 @@ import { Button, Textarea } from 'flowbite-react'
 
 
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit ,onDelete}) => {
     const { currentUser } = useSelector(state => state.user)
     const [user, setUser] = useState({})
     const [editedContent, setEditedContent] = useState(comment.content)
@@ -98,9 +98,14 @@ const Comment = ({ comment, onLike, onEdit }) => {
                     </p>
                     {
                         currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                            <button onClick={handleEdit} type='button' className='text-secondary hover:text-third'>
-                                Edit
-                            </button>
+                            <>
+                                <button onClick={handleEdit} type='button' className='text-secondary hover:text-third'>
+                                    Edit
+                                </button>
+                                <button onClick={()=>onDelete(comment._id)} type='button' className='text-secondary hover:text-third'>
+                                    Delete
+                                </button>
+                            </>
                         )
                     }
                 </div>

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
-import { Alert, Button, Textarea, TextInput } from 'flowbite-react';
+import { Alert, Button, Modal, Textarea, TextInput } from 'flowbite-react';
 import Comment from './Comment';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 const CommentSection = ({ postId }) => {
     const [comment, setComment] = useState("")
     const navigate = useNavigate()
+    const [commentToDelete, setCommentToDelete] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const { currentUser } = useSelector(state => state.user)
     const [commentError, setCommentError] = useState(null)
     const [comments, setComments] = useState([])
@@ -24,6 +27,7 @@ const CommentSection = ({ postId }) => {
             setCommentError("Comment cannot be empty")
             return
         }
+        // setComment('')
         try {
             const res = await fetch(`/api/comment/create`, {
                 method: 'POST',
@@ -96,17 +100,42 @@ const CommentSection = ({ postId }) => {
         } catch (error) {
             console.log(error.message);
         }
-    }
+    };
 
 
 
-    const handleEdit = async (comment ,editedContent)=>{
+    const handleEdit = async (comment, editedContent) => {
         setComments(
-            comments.map((com)=>
-            com._id === comment._id? {...com , content:editedContent} : com)
+            comments.map((com) =>
+                com._id === comment._id ? { ...com, content: editedContent } : com)
         )
+    };
 
+
+    const handleDelete = async (commentId) => {
+        setShowModal(false)
+        try {
+            if (!currentUser) {
+                navigate('/sign-in')
+                return;
+            }
+            const res = await fetch(`/api/comment/deleteComment/${commentId}`, {
+                method: 'DELETE'
+            })
+            if (res.ok) {
+                const data = await res.json();
+                // setComments(comment.filter((comment) => comment._id !== commentId))
+                setComments(comments => comments.filter(comment => comment._id !== commentId));
+                // setCommentToDelete(null)
+
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     }
+
+
+
     return (
         <div className='max-w-2xl mx-auto w-full p-3'>
             {
@@ -171,12 +200,40 @@ const CommentSection = ({ postId }) => {
                                     comment={comment}
                                     onLike={handleLike}
                                     onEdit={handleEdit}
+                                    onDelete={(commentId) => {
+                                        setCommentToDelete(commentId)
+                                        setShowModal(true)
+                                    }}
                                 />
                             ))
                         }
                     </>
                 )
             }
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                popup
+                size='md'
+            >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className='text-center'>
+                        <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                            Are you sure you want to delete this comment?
+                        </h3>
+                        <div className='flex justify-center gap-4'>
+                            <Button color='failure' onClick={() => handleDelete(commentToDelete)}>
+                                Yes, I'm sure
+                            </Button>
+                            <Button color='gray' onClick={() => setShowModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     )
 }
