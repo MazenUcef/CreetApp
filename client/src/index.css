@@ -5,6 +5,7 @@
 
 .post-content p{
 margin-bottom: 0.4rem;
+color: navy;
 }
 
 .post-content h1{
@@ -12,11 +13,13 @@ font-size: 1.5rem;
 font-weight: 600;
 font-family: sans-serif;
 margin: 1.5rem 0;
+color: navy;
 }
 .post-content h2{
 font-size: 1.3rem;
 font-family: sans-serif;
 margin: 1.5rem 0;
+color: navy;
 }
 .break-words {
     word-wrap: break-word;

@@ -2,12 +2,14 @@ import { Button, Spinner } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CommentSection from '../components/CommentSection'
+import PostCard from '../components/PostCard'
 
 const PostPage = () => {
     const { postSlug } = useParams()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(true)
     const [post, setPost] = useState(null)
+    const [recentPosts, setRecentPosts] = useState(null)
 
     console.log(post);
     console.log(post?._id);
@@ -36,6 +38,21 @@ const PostPage = () => {
         }
         fetchPost()
     }, [postSlug])
+
+    useEffect(() => {
+        try {
+            const fetchRecentPost = async () => {
+                const res = await fetch(`/api/post/display?limit=3`);
+                const data = await res.json()
+                if (res.ok) {
+                    setRecentPosts(data.Posts)
+                }
+            }
+            fetchRecentPost()
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, [])
     if (loading) return (
         <div className=' flex justify-center items-center min-h-screen'>
             <Spinner
@@ -43,6 +60,7 @@ const PostPage = () => {
             />
         </div>
     )
+    console.log(recentPosts);
     return (
         <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
             <h1 className='text-center text-4xl my-7 font-serif lg:text-4xl font-bold max-w-2xl mx-auto p-3 text-primary'>{post && post.title}</h1>
@@ -57,7 +75,15 @@ const PostPage = () => {
             <div className='p-3 max-w-2xl mx-auto w-full post-content' dangerouslySetInnerHTML={{ __html: post && post.content }}>
 
             </div>
-            <CommentSection postId={post?._id}/>
+            <CommentSection postId={post?._id} />
+
+            <div className='flex flex-col justify-center items-center mb-5'>
+                <h1 className='text-2xl hover:text-secondary font-bold text-primary mt-5'>Recent articles</h1>
+                <div className='flex flex-wrap gap-5 mt-5 justify-center'>
+                    {recentPosts &&
+                        recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+                </div>
+            </div>
         </main>
     )
 }
