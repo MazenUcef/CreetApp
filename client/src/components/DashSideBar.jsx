@@ -5,10 +5,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOutSuccess } from '../redux/user/userSlice';
 import { FaUsers } from "react-icons/fa6";
+import { FaComments } from "react-icons/fa";
+
 
 const DashSideBar = () => {
   const location = useLocation();
-  const {currentUser} = useSelector(state=>state.user)
+  const { currentUser } = useSelector(state => state.user)
   const [tab, setTab] = useState('');
   const dispatch = useDispatch()
   const handleSignOut = async () => {
@@ -42,23 +44,30 @@ const DashSideBar = () => {
       <Sidebar.Items>
         <Sidebar.ItemGroup className='flex flex-col gap-1'>
           <Link to={'/dashboard?tab=profile'}>
-            <Sidebar.Item className="text-primary font-bold cursor-pointer" as={'div'} active={tab === "profile"} icon={HiUser} label={currentUser.isAdmin? `Admin` : `User`}>
+            <Sidebar.Item className="text-primary font-bold cursor-pointer" as={'div'} active={tab === "profile"} icon={HiUser} label={currentUser.isAdmin ? `Admin` : `User`}>
               Profile
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-          <Link to='/dashboard?tab=posts'>
-            <Sidebar.Item active={tab === 'posts'} icon={HiDocumentText} as={'div'}>
-              Posts
-            </Sidebar.Item>
-          </Link>
+            <Link to='/dashboard?tab=posts'>
+              <Sidebar.Item active={tab === 'posts'} icon={HiDocumentText} as={'div'}>
+                Posts
+              </Sidebar.Item>
+            </Link>
           )}
           {currentUser.isAdmin && (
-          <Link to='/dashboard?tab=users'>
-            <Sidebar.Item active={tab === 'users'} icon={FaUsers} as={'div'}>
-              Users
-            </Sidebar.Item>
-          </Link>
+            <Link to='/dashboard?tab=users'>
+              <Sidebar.Item active={tab === 'users'} icon={FaUsers} as={'div'}>
+                Users
+              </Sidebar.Item>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=comments'>
+              <Sidebar.Item active={tab === 'comments'} icon={FaComments} as={'div'}>
+                Comments
+              </Sidebar.Item>
+            </Link>
           )}
           <Link onClick={handleSignOut}>
             <Sidebar.Item className="text-primary font-bold cursor-pointer" as={'div'} icon={HiArrowSmRight} >
