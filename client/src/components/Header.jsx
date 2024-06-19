@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux'
 import { signOutSuccess } from '../redux/user/userSlice';
@@ -10,6 +10,22 @@ const Header = () => {
     const pathname = useLocation().pathname
     const dispatch = useDispatch()
     const { currentUser } = useSelector(state => state.user)
+    const [searchTerm, setSearchTerm] = useState('')
+    const location = useLocation()
+    const navigate = useNavigate()
+    // console.log(searchTerm);
+    // console.log(location.search);
+
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search)
+        console.log(urlParams);
+        const searchTermFormUrl = urlParams.get('searchTerm')
+        console.log(searchTermFormUrl);
+        if (searchTermFormUrl) {
+            setSearchTerm(searchTermFormUrl)
+        }
+    }, [location.search])
     // console.log(currentUser.photoURL);
     const handleSignOut = async () => {
         try {
@@ -26,18 +42,23 @@ const Header = () => {
             console.log(error.message);
         }
     }
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const urlParams = new URLSearchParams(location.search)
+        urlParams.set('searchTerm', searchTerm)
+        const searchQuery = urlParams.toString()
+        navigate(`/search?${searchQuery}`)
+    }
     return (
         <Navbar className='border-b-2 bg-primary'>
             <Link to={'/'} className='self-center whitespace-nowrap text-secondary text-sm sm:text-2xl font-bold'>
                 _Creet
             </Link>
-
-            <form>
-                <TextInput rightIcon={AiOutlineSearch} type='text' placeholder='Search...' className='bg-third rounded-full outline-secondary lg:inline' />
+            <form onSubmit={handleSubmit}>
+                <TextInput rightIcon={AiOutlineSearch} onChange={(e) => setSearchTerm(e.target.value)} type='text' placeholder='Search...' className='bg-third rounded-full outline-secondary lg:inline' />
             </form>
-            <Button className='w-12 rounded-xl h-10 lg:hidden xl:hidden hover:text-third bg-secondary text-primary'>
-                <AiOutlineSearch color='#0c4a60' size={20} />
-            </Button>
             <Navbar.Collapse>
                 <Navbar.Link active={pathname === '/'} className='text-secondary' as={'div'}>
                     <Link to={'/'}>
