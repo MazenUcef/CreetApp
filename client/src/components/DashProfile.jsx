@@ -7,14 +7,14 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutSuccess, updateFailure, updateStart, updateSuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 
 const DashProfile = () => {
   const dispatch = useDispatch()
   const photoPicker = useRef()
-  const { currentUser, error , loading } = useSelector(state => state.user)
+  const { currentUser, error, loading } = useSelector(state => state.user)
   const [photoFile, setPhotoFile] = useState(null);
   const [photoFileUrl, setPhotoFileUrl] = useState(null);
   const [photoFileUploadprogress, setphotoFileUploadprogress] = useState(null);
@@ -183,7 +183,7 @@ const DashProfile = () => {
         <TextInput onChange={handelChange} type='text' id='username' placeholder='username' defaultValue={currentUser.username} />
         <TextInput onChange={handelChange} type='email' id='email' placeholder='email' defaultValue={currentUser.email} />
         <TextInput onChange={handelChange} type='password' id='password' placeholder='password' />
-        <Button className='w-full text-secondary hover:bg-third' type='submit' disabled={loading || photoFileUploadprogress}>{loading ? "Loading..." : 'Update'}</Button>
+        <Button className='w-full text-secondary hover:bg-third' type='submit' >{loading ? "Loading..." : 'Update'}</Button>
         {
           currentUser.isAdmin && (
             <Link to={'/create-post'}>
