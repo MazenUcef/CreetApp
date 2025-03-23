@@ -86,7 +86,7 @@ const Header = () => {
                         arrowIcon={false}
                         inline
                         label={
-                            <Avatar alt='user' img={currentUser.profilePicture} rounded />
+                            <Avatar alt='user' img={currentUser.photoURL} rounded />
                         }
                     >
                         <Dropdown.Header>
@@ -99,7 +99,7 @@ const Header = () => {
                             <Dropdown.Item>Profile</Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
-                        <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+                        <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
                     </Dropdown>
                 ) : (
                     <Link to='/sign-in'>
