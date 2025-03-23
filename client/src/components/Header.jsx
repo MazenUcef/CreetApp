@@ -52,62 +52,75 @@ const Header = () => {
         navigate(`/search?${searchQuery}`)
     }
     return (
-        <Navbar className='border-b-2 bg-primary'>
-            <Link to={'/'} className='self-center whitespace-nowrap text-secondary text-sm sm:text-2xl font-bold'>
+        <Navbar className='border-b-2'>
+            <Link
+                to='/'
+                className='self-center whitespace-nowrap text-xl sm:text-2xl font-bold text-secondary  dark:text-white'
+            >
                 _Creet
             </Link>
             <form onSubmit={handleSubmit}>
-                <TextInput rightIcon={AiOutlineSearch} onChange={(e) => setSearchTerm(e.target.value)} type='text' placeholder='Search...' className='bg-third rounded-full outline-secondary lg:inline' />
+                <TextInput
+                    type='text'
+                    placeholder='Search...'
+                    rightIcon={AiOutlineSearch}
+                    className='hidden lg:inline'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
             </form>
-            <Navbar.Collapse>
-                <Navbar.Link active={pathname === '/'} className='text-secondary' as={'div'}>
-                    <Link to={'/'}>
-                        Home
+            <Button className='w-12 h-10 lg:hidden' color='gray' pill>
+                <AiOutlineSearch />
+            </Button>
+            <div className='flex gap-2 md:order-2'>
+                {/* <Button
+                    className='w-12 h-10 hidden sm:inline'
+                    color='gray'
+                    pill
+                    onClick={() => dispatch(toggleTheme())}
+                >
+                    {theme === 'light' ? <FaSun /> : <FaMoon />}
+                </Button> */}
+                {currentUser ? (
+                    <Dropdown
+                        arrowIcon={false}
+                        inline
+                        label={
+                            <Avatar alt='user' img={currentUser.profilePicture} rounded />
+                        }
+                    >
+                        <Dropdown.Header>
+                            <span className='block text-sm'>@{currentUser.username}</span>
+                            <span className='block text-sm font-medium truncate'>
+                                {currentUser.email}
+                            </span>
+                        </Dropdown.Header>
+                        <Link to={'/dashboard?tab=profile'}>
+                            <Dropdown.Item>Profile</Dropdown.Item>
+                        </Link>
+                        <Dropdown.Divider />
+                        <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+                    </Dropdown>
+                ) : (
+                    <Link to='/sign-in'>
+                        <Button className='bg-primary text-secondary hover:bg-secondary'>
+                            Sign In
+                        </Button>
                     </Link>
-                </Navbar.Link>
-                <Navbar.Link active={pathname === '/about'} className='text-secondary' as={'div'}>
-                    <Link to={'/about'}>
-                        About
-                    </Link>
-                </Navbar.Link>
-                <Navbar.Link active={pathname === '/projects'} className='text-secondary' as={'div'}>
-                    <Link to={'/projects'}>
-                        Projects
-                    </Link>
-                </Navbar.Link>
-            </Navbar.Collapse>
-            <div className='flex gap-2'>
-                {
-                    currentUser ?
-                        (
-                            <Dropdown
-                                arrowIcon={false}
-                                inline
-                                label={<Avatar alt='user' img={currentUser.photoURL} rounded className='w-10 h-6' />}
-                            >
-                                <Dropdown.Header>
-                                    <span className='block text-sm'>@{currentUser.username}</span>
-                                    <span className='block text-sm font-medium truncate'>@{currentUser.email}</span>
-                                </Dropdown.Header>
-                                <Link to={'/dashboard?tab=profile'}>
-                                    <Dropdown.Item>Profile</Dropdown.Item>
-                                </Link>
-                                <Dropdown.Divider />
-                                <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
-                            </Dropdown>
-                        )
-                        :
-                        (
-                            <Link to={'/sign-in'}>
-                                <Button className='font-bold hover:text-third bg-secondary text-primary'>
-                                    Sign In
-                                </Button>
-                            </Link>
-
-                        )
-                }
+                )}
                 <Navbar.Toggle />
             </div>
+            <Navbar.Collapse>
+                <Navbar.Link active={pathname === '/'} as={'div'}>
+                    <Link to='/'>Home</Link>
+                </Navbar.Link>
+                <Navbar.Link active={pathname === '/about'} as={'div'}>
+                    <Link to='/about'>About</Link>
+                </Navbar.Link>
+                <Navbar.Link active={pathname === '/projects'} as={'div'}>
+                    <Link to='/projects'>Projects</Link>
+                </Navbar.Link>
+            </Navbar.Collapse>
         </Navbar>
     )
 }
